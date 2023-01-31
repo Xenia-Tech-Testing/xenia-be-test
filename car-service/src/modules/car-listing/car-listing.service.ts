@@ -38,6 +38,9 @@ export class CarListingService {
       where: {
         id: id,
       },
+      relations: {
+        car: true,
+      },
     });
   }
 
@@ -70,6 +73,32 @@ export class CarListingService {
       throw new BadRequestException('Car listing Not Found');
     }
     carFound.softRemove();
+    return {
+      success: true,
+    };
+  }
+
+  async rentCar(id: number, userId: number) {
+    const carListingFound = await this.carListingRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: {
+        car: true,
+      },
+    });
+
+    if (!carListingFound) {
+      throw new BadRequestException('Car listing not found');
+    }
+    if (carListingFound.car.user_id == userId) {
+      throw new BadRequestException('Can not rent your car');
+    }
+    if (carListingFound.user_rent) {
+      throw new BadRequestException('Car has rent');
+    }
+    carListingFound.user_rent = userId;
+    carListingFound.save();
     return {
       success: true,
     };

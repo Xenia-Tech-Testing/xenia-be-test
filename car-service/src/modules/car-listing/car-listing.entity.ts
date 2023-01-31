@@ -29,6 +29,9 @@ export class CarListingEntity extends BaseEntity {
   @Column({ type: 'float' })
   price: number;
 
+  @Column({ type: 'bigint', nullable: true })
+  user_rent: number;
+
   @ManyToOne(() => CarEntity)
   @JoinColumn({ name: 'car_id' })
   car: CarEntity;

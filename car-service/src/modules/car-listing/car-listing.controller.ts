@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { QueryParamDto } from 'src/common/dtos/query-params.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CarListingService } from './car-listing.service';
@@ -36,5 +36,10 @@ export class CarListingController {
   @Delete(':id')
   async deleteByid(@Param() { id }: { id: string }) {
     return this.carListingService.deleteById(Number(id));
+  }
+
+  @Post(':id/rent')
+  async rent(@Param() { id }: { id: string }, @Request() req: any) {
+    return this.carListingService.rentCar(Number(id), req.user.sub);
   }
 }
